@@ -49,3 +49,35 @@ eks/aws-load-balancer-controller \
 --set region=ap-northeast-1 \
 --set vpcId={vpcID}
 ```
+
+# Grafana
+
+## 1.Add helm repository
+```powershell
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+```
+```
+repo updata
+```
+## 2. repo updata
+```powershell
+repo updata
+```
+## 3. Apply values.yaml
+## 4. install helm
+```powershell
+ helm install monitoring prometheus-community/kube-prometheus-stack \
+  -n monitoring \
+  -f values.yaml
+```
+# Prometheus
+## 1. execute prometheus
+```powershell
+kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090:9090
+```
+## 2. local port forwarding
+```powershell
+ssh -i "bastion.pem" -L 9090:localhost:9090 ec2-user@43.207.138.198
+```
+
+
