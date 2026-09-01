@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: # 리소스를 식별하고 구분하기 위한 정보
+  name: wsi-deployment
+  namespace: wsi
+  
+spec: # spec 의미 -> 어떤식으로 구성할 것인가?
+  replicas: 2 # 몇개의 파드를 원하는가?
+  selector: # 어떤 파드를 관리할 것인지 선택
+    matchLabels: # 이 라벨과 일치하는 파드를 선택
+      app: wsi # 라벨 설정
+  template:
+    metadata:
+      labels:
+        app: wsi
+        
+    spec:
+      serviceAccountName: db-sa 
+      containers:
+        - name: wsi-app
+          imagePullPolicy: Always
+          image: 950274644703.dkr.ecr.ap-northeast-1.amazonaws.com/wsi-ecr:WSI_vLatest
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          envFrom: # ConfogMap, Secret에 있는 컨테이너의 환경변수로 가져오기
+            - configMapRef: # ConfigMap에서 가져오기
+                name: wsi-config
+          resources:
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: wsi
+              topologyKey: "kubernetes.io/hostname"
