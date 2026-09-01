@@ -56,9 +56,6 @@ eks/aws-load-balancer-controller \
 ```powershell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 ```
-```
-repo updata
-```
 ## 2. repo updata
 ```powershell
 repo updata
