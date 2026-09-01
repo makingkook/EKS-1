@@ -1,0 +1,35 @@
+grafana:
+  enabled: true
+  adminUser: 1101-admin
+  adminPassword: wsiGrafana1101!
+
+  persistence:
+    enabled: false
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+  ingress:
+    enabled: true
+    ingressClassName: alb
+
+    annotations:
+      alb.ingress.kubernetes.io/load-balancer-name: wsi-grafana-alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/backend-protocol: HTTP
+      alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+      alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+      alb.ingress.kubernetes.io/healthcheck-path: /api/health
+      alb.ingress.kubernetes.io/success-codes: "200"
+
+    path: /
+    pathType: Prefix
+
+prometheus:
+  enabled: true
+
+  prometheusSpec:
+    retention: 7d
